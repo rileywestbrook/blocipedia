@@ -3,13 +3,21 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   attr_accessor :login
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable, :validatable,
+         authentication_keys: [:login]
 
          validates :username, presence: true, length: { maximum: 15 }, uniqueness: {case_sensitive: false}
 
-  def self.find_for_database_authentication warden_conditions
+  def self.find_first_by_auth_conditions(warden_conditions)
     conditions = warden_conditions.dup
-    login = conditions.delete(:login)
-    where(conditions).where(["lower(username) = :value OR lower(email) = :value", {value: login.strip.downcase}]).first
+    if login = conditions.delete(:login)
+      where(conditions).where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
+    else
+      if conditions[:username].nil?
+        where(conditions).first
+      else
+        where(username: conditions[:username]).first
+      end
+    end
   end
 end
