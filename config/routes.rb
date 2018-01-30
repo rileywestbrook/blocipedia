@@ -1,7 +1,13 @@
 Rails.application.routes.draw do
+  get 'downgrade/new'
+
   resources :wikis
 
   devise_for :users, controllers: { sessions: 'users/sessions' }
+
+  resources :charges, only: [:new, :create]
+  resources :downgrade, only: [:new, :create]
+  post 'downgrade/create'
 
   get 'about' => 'welcome#about'
 
