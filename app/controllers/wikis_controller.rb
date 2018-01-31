@@ -9,6 +9,11 @@ class WikisController < ApplicationController
   def show
     @wiki = Wiki.find(params[:id])
     authorize @wiki
+
+    unless (@wiki.private == false) || @wiki.user == current_user || current_user.admin?
+      flash[:alert] = "You are not authorized to view this wiki."
+      redirect_to new_charge_path
+    end
   end
 
   def new
@@ -20,6 +25,7 @@ class WikisController < ApplicationController
     @wiki = Wiki.new
     @wiki.title = params[:wiki][:title]
     @wiki.body = params[:wiki][:body]
+    @wiki.private = params[:wiki][:private]
     @wiki.user = current_user
     authorize @wiki
 
@@ -41,6 +47,7 @@ class WikisController < ApplicationController
     @wiki = Wiki.find(params[:id])
     @wiki.title = params[:wiki][:title]
     @wiki.body = params[:wiki][:body]
+    @wiki.private = params[:wiki][:private]
     authorize @wiki
 
     if @wiki.save
