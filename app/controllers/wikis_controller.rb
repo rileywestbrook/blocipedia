@@ -12,7 +12,7 @@ class WikisController < ApplicationController
 
     unless (@wiki.private == false) || @wiki.user == current_user || current_user.admin?
       flash[:alert] = "You are not authorized to view this wiki."
-      redirect_to new_charge_path
+      redirect_to wikis_path
     end
   end
 

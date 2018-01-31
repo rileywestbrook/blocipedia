@@ -4,9 +4,9 @@
   <div class="text-center container">
     <%= button_to "Wiki", wikis_path, method: :get, class: "btn btn-secondary btn-lg left-button" %>
     <% if current_user.standard? %>
-      <%= button_to "Upgrade Account", new_charge_path, method: :get, class: "btn btn-secondary btn-lg" %>
+      <%= button_to "Upgrade Account", new_charge_path, method: :get, class: "btn btn-secondary btn-lg right-button" %>
     <% else %>
-      <%= link_to "Downgrade Account", downgrade_new_path, method: :get, class: "btn btn-secondary btn-lg right-button" %>
+      <%= button_to "Downgrade Account", downgrade_new_path, method: :get, class: "btn btn-secondary btn-lg right-button" %>
     <% end %>
   </div>
 </div>
