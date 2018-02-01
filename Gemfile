@@ -55,3 +55,5 @@ gem 'faker'
 gem 'figaro', '1.0'
 
 gem 'stripe'
+
+gem 'redcarpet'
