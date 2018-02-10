@@ -2,17 +2,25 @@ class WikisController < ApplicationController
   before_action :authenticate_user!, except: :show
 
   def index
-    @wikis = Wiki.all
-    authorize @wikis
+    @wikis = policy_scope(Wiki)
   end
 
   def show
     @wiki = Wiki.find(params[:id])
     authorize @wiki
 
-    unless (@wiki.private == false) || @wiki.user == current_user || current_user.admin?
+    if current_user.present?
+      collaborators = []
+      @wiki.collaborators.each do |collaborator|
+        collaborators << collaborator.email
+      end
+      unless (@wiki.private == false) || @wiki.user == current_user || current_user.admin? || collaborators.include?(current_user.email)
+        flash[:alert] = "You are not authorized to view this wiki."
+        redirect_to wikis_path
+      end
+    else
       flash[:alert] = "You are not authorized to view this wiki."
-      redirect_to wikis_path
+      redirect_to new_user_registration_path
     end
   end
 
@@ -30,6 +38,7 @@ class WikisController < ApplicationController
     authorize @wiki
 
     if @wiki.save
+      @wiki.collaborators = Collaborator.new(wiki_id: @wiki.id, user_id: params[:user_id])
       flash[:notice] = "Wiki was saved."
       redirect_to @wiki
     else
@@ -50,8 +59,12 @@ class WikisController < ApplicationController
     @wiki.private = params[:wiki][:private]
     authorize @wiki
 
-    if @wiki.save
+    if @wiki.save && (@wiki.user == current_user || current_user.admin?)
+      @wiki.collaborators = Collaborator.new(wiki_id: @wiki.id, user_id: params[:user_id])
       flash[:notice] = "Wiki was updated."
+      redirect_to @wiki
+    elsif @wiki.save
+      flash[:notice] = "Wiki was updated successfully."
       redirect_to @wiki
     else
       flash.now[:alert] = "There was an error saving the wiki. Please try again."
