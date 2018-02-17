@@ -1,5 +1,5 @@
 class WikisController < ApplicationController
-  before_action :authenticate_user!, except: :show
+  before_action :authenticate_user!
 
   def index
     @wikis = policy_scope(Wiki)
@@ -12,7 +12,7 @@ class WikisController < ApplicationController
     if current_user.present?
       collaborators = []
       @wiki.collaborators.each do |collaborator|
-        collaborators << collaborator.email
+        collaborators << collaborator.user.email
       end
       unless (@wiki.private == false) || @wiki.user == current_user || current_user.admin? || collaborators.include?(current_user.email)
         flash[:alert] = "You are not authorized to view this wiki."
@@ -38,7 +38,7 @@ class WikisController < ApplicationController
     authorize @wiki
 
     if @wiki.save
-      Collaborator.new(wiki_id: @wiki.id, user_id: params[:user_id], email: params[:email])
+      @wiki.collaborators = Collaborator.update_collaborators(params[:wiki][:collaborators], @wiki)
       flash[:notice] = "Wiki was saved."
       redirect_to @wiki
     else
@@ -60,7 +60,7 @@ class WikisController < ApplicationController
     authorize @wiki
 
     if @wiki.save && (@wiki.user == current_user || current_user.admin?)
-      Collaborator.new(wiki_id: @wiki.id, user_id: params[:user_id], email: params[:email])
+      @wiki.collaborators = Collaborator.update_collaborators(params[:wiki][:collaborators])
       flash[:notice] = "Wiki was updated."
       redirect_to @wiki
     elsif @wiki.save

@@ -12,8 +12,9 @@
     <p>Collaborators:
       <% unless @wiki.collaborators.empty? %>
         <% @wiki.collaborators.each do |collaborator| %>
-          <p><%= collaborator.email %></p>
+          <p><%= collaborator.user.email %></p>
         <% end %>
+        <!--add code to delete a collaborator - probably just a small x next to each name that is linked to delete in wiki controller -->
       <% end %>
     </p>
   </div>

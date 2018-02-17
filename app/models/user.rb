@@ -3,7 +3,6 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   has_many :wikis, dependent: :destroy
   has_many :collaborators
-  has_many :wiki_collabs, source: 'wiki', through: :collaborators
   after_initialize { self.role ||= :standard }
   attr_accessor :login
   devise :database_authenticatable, :registerable,
