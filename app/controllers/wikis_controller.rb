@@ -38,7 +38,7 @@ class WikisController < ApplicationController
     authorize @wiki
 
     if @wiki.save
-      @wiki.collaborators = Collaborator.update_collaborators(params[:wiki][:collaborators], @wiki)
+      Collaborator.update_collaborators(params[:wiki][:collaborators], @wiki)
       flash[:notice] = "Wiki was saved."
       redirect_to @wiki
     else
@@ -60,7 +60,7 @@ class WikisController < ApplicationController
     authorize @wiki
 
     if @wiki.save && (@wiki.user == current_user || current_user.admin?)
-      @wiki.collaborators = Collaborator.update_collaborators(params[:wiki][:collaborators])
+      Collaborator.update_collaborators(params[:wiki][:collaborators], @wiki)
       flash[:notice] = "Wiki was updated."
       redirect_to @wiki
     elsif @wiki.save

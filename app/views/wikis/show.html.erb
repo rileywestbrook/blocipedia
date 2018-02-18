@@ -12,9 +12,10 @@
     <p>Collaborators:
       <% unless @wiki.collaborators.empty? %>
         <% @wiki.collaborators.each do |collaborator| %>
-          <p><%= collaborator.user.email %></p>
+          <p style="float: left;"><%= collaborator.user.email %></p>
+          <%= render partial: 'collaborators/new', locals: { collaborators: @wiki.collaborators } %>
         <% end %>
-        <!--add code to delete a collaborator - probably just a small x next to each name that is linked to delete in wiki controller -->
+         <!---add code to delete a collaborator - probably just a small x next to each name that is linked to delete in wiki controller -->
       <% end %>
     </p>
   </div>
