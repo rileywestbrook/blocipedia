@@ -1,2 +1,2 @@
 <%= f.label :collaborators %>
-<%= f.text_field :collaborators, class: 'form-control', placeholder: "Enter collaborator emails separated by commas", value: collaborators.map(&:email).join(', ') %>
+<%= f.text_field :collaborators, class: 'form-control', placeholder: "Enter collaborator emails separated by commas", value: collaborators.map{ |collaborator| User.find(collaborator.user_id).email }.join(', ') %>

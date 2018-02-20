@@ -14,6 +14,7 @@
         <% @wiki.collaborators.each do |collaborator| %>
           <p style="float: left;"><%= collaborator.user.email %></p>
           <%= render partial: 'collaborators/new', locals: { collaborators: @wiki.collaborators } %>
+          <div style="clear: both;"></div>
         <% end %>
          <!---add code to delete a collaborator - probably just a small x next to each name that is linked to delete in wiki controller -->
       <% end %>
