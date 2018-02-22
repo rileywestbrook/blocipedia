@@ -84,4 +84,11 @@ class WikisController < ApplicationController
       render :show
     end
   end
+
+  def delete_collaborators
+    @collaborator = Collaborator.find(params[:id])
+    @wiki = @collaborator.wiki
+    @collaborator.destroy
+    redirect_to @wiki
+  end
 end
