@@ -1,15 +1,14 @@
 Rails.application.routes.draw do
   get 'downgrade/new'
 
+  resources :wikis
+
   devise_for :users, controllers: { sessions: 'users/sessions' }
 
   resources :charges, only: [:new, :create]
   resources :downgrade, only: [:new, :create]
+  resources :collaborators, only: [:destroy]
   post 'downgrade/create'
-  resources :wikis do
-    resources :collaborators, only: [:new, :create, :update, :destroy]
-  end
-  post 'delete_collaborators' => 'wikis#delete_collaborators', as: :deletecollaborators
 
   get 'about' => 'welcome#about'
 

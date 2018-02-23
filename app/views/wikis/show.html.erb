@@ -13,7 +13,7 @@
       <% unless @wiki.collaborators.empty? %>
         <% @wiki.collaborators.each do |collaborator| %>
           <p style="float: left;"><%= collaborator.user.email %></p>
-          <%= render partial: 'collaborators/new', locals: { collaborators: @wiki.collaborators } %>
+          <%= link_to "x", collaborator_path(collaborator), method: :delete, style: "color: red; text-decoration: none; padding-left: 10px; float: left;" %>
           <div style="clear: both;"></div>
         <% end %>
          <!---add code to delete a collaborator - probably just a small x next to each name that is linked to delete in wiki controller -->
